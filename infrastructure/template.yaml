@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Legalink WhatsApp Agent API
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: python3.10
+    Architectures:
+      - x86_64
+
+Parameters:
+  WebhookVerifyToken:
+    Type: String
+    Description: Token used to verify WhatsApp webhook requests
+    NoEcho: true
+  
+  GraphApiToken:
+    Type: String
+    Description: WhatsApp Graph API Token for sending messages
+    NoEcho: true
+  
+  AnthropicApiKey:
+    Type: String
+    Description: Anthropic API Key for Claude 4 integration
+    NoEcho: true
+
+Resources:
+  LegalinkWhatsAppFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: app.main.handler
+      Description: Legalink WhatsApp Agent API Lambda function
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          STAGE: !Ref AWS::StackName
+          WEBHOOK_VERIFY_TOKEN: !Ref WebhookVerifyToken
+          GRAPH_API_TOKEN: !Ref GraphApiToken
+          ANTHROPIC_API_KEY: !Ref AnthropicApiKey
+      Tags:
+        Project: legalink-whatsapp-agent
+
+  ApiGatewayApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: api
+      Tags:
+        Project: legalink-whatsapp-agent
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+
+Outputs:
+  LegalinkWhatsAppFunction:
+    Description: "Legalink WhatsApp Agent Lambda Function ARN"
+    Value: !GetAtt LegalinkWhatsAppFunction.Arn
+  ApiGatewayUrl:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/api/"
+  ApiFunction:
+    Description: "Legalink WhatsApp Agent Lambda Function"
+    Value: !Ref LegalinkWhatsAppFunction
