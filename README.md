@@ -124,6 +124,76 @@ The heart of this application is an intelligent agent built with LangGraph that 
    - Verify Token: The same value you set for `WEBHOOK_VERIFY_TOKEN` in your environment
    - Subscribe to the `messages` webhook field
 
+## Testing
+
+The project includes comprehensive test coverage for all components:
+
+### Running Tests
+
+1. Install test dependencies (included in requirements.txt):
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run all tests:
+   ```bash
+   pytest
+   ```
+
+3. Run tests with coverage:
+   ```bash
+   pytest --cov=app --cov-report=html
+   ```
+
+4. Run specific test categories:
+   ```bash
+   # Unit tests only
+   pytest -m unit
+   
+   # API tests only
+   pytest -m api
+   
+   # Agent tests only
+   pytest -m agent
+   
+   # Integration tests only
+   pytest -m integration
+   ```
+
+### Test Structure
+
+```
+tests/
+├── conftest.py                 # Test fixtures and configuration
+├── test_agent_state.py         # Agent state management tests
+├── test_agent_nodes.py         # Agent workflow nodes tests
+├── test_knowledge.py           # Knowledge base tests
+├── test_api_messages.py        # Messages API tests
+├── test_api_webhook.py         # WhatsApp webhook tests
+└── test_workflow.py            # End-to-end workflow tests
+```
+
+### Test Categories
+
+- **Unit Tests** (`-m unit`): Test individual functions and components
+- **API Tests** (`-m api`): Test FastAPI endpoints and HTTP interactions
+- **Integration Tests** (`-m integration`): Test complete workflows and component interactions
+- **Agent Tests** (`-m agent`): Test LangGraph agent functionality
+
+### Mock Strategy
+
+Tests use comprehensive mocking for:
+- **Anthropic Claude API**: All Claude AI calls are mocked to avoid API costs and ensure deterministic tests
+- **WhatsApp Graph API**: HTTP calls to WhatsApp are mocked for reliable testing
+- **External Dependencies**: Environment variables and external services are mocked
+
+### Running Tests in CI/CD
+
+For continuous integration, use:
+```bash
+pytest --cov=app --cov-report=xml --cov-fail-under=80
+```
+
 ## Development with uv
 
 This project uses uv for package management:
