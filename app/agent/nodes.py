@@ -150,6 +150,25 @@ async def generate_response_node(state: AgentState) -> Dict[str, Any]:
     return state
 
 
+async def ask_followup_node(state: AgentState) -> Dict[str, Any]:
+    """
+    Add a follow-up question to encourage continued conversation.
+    """
+    try:
+        # Only add followup for legal responses, not for greetings or errors
+        if state["is_legal_question"] and not state.get("error_message"):
+            followup_question = "\n\n¿Tienes alguna otra pregunta sobre derecho laboral?"
+            state["response"] = state["response"] + followup_question
+        
+        logger.info("Follow-up question added to response")
+        
+    except Exception as e:
+        logger.error(f"Error in ask_followup_node: {e}")
+        state["error_message"] = str(e)
+    
+    return state
+
+
 async def update_conversation_node(state: AgentState) -> Dict[str, Any]:
     """
     Update conversation history with current interaction.
