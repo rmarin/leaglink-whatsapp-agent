@@ -11,6 +11,7 @@ from .nodes import (
     classify_message_node,
     analyze_legal_question_node,
     generate_response_node,
+    ask_followup_node,
     update_conversation_node,
     should_analyze_legal,
     should_generate_response,
@@ -35,6 +36,7 @@ def create_legal_agent():
     workflow.add_node("classify", classify_message_node)
     workflow.add_node("analyze", analyze_legal_question_node)
     workflow.add_node("generate", generate_response_node)
+    workflow.add_node("followup", ask_followup_node)
     workflow.add_node("update", update_conversation_node)
     
     # Set entry point
@@ -46,8 +48,8 @@ def create_legal_agent():
         should_analyze_legal,
         {
             "analyze": "analyze",
-            "respond": "update",
-            "error": "update"
+            "respond": "followup",
+            "error": "followup"
         }
     )
     
@@ -56,12 +58,13 @@ def create_legal_agent():
         should_generate_response,
         {
             "generate": "generate",
-            "error": "update"
+            "error": "followup"
         }
     )
     
     # Add regular edges
-    workflow.add_edge("generate", "update")
+    workflow.add_edge("generate", "followup")
+    workflow.add_edge("followup", "update")
     workflow.add_edge("update", END)
     
     # Add memory for conversation persistence

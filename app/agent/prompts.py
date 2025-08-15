@@ -46,6 +46,8 @@ Soy tu asistente legal especializado en derecho laboral colombiano. Puedo ayudar
 
 *Nota: Esta información es orientativa y no reemplaza la asesoría legal profesional.*"""
 
+FOLLOWUP_PROMPT = "¿Tienes alguna otra pregunta sobre derecho laboral?"
+
 LEGAL_RESPONSE_PROMPT = """Basándote en tu conocimiento del derecho laboral colombiano, responde a la siguiente consulta:
 
 CONSULTA: {question}
