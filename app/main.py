@@ -19,3 +19,7 @@ handler = Mangum(app)
 @app.get("/")
 async def root():
     return {"message": "Welcome to Legalink WhatsApp Agent API"}
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy", "service": "legalink-whatsapp-agent"}
