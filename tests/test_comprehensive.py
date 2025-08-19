@@ -11,7 +11,7 @@ from app.agent.workflow import process_legal_query
 
 @pytest.mark.comprehensive 
 class TestLegalAgentComprehensive:
-    """Comprehensive tests for the Colombian Labor Law agent system."""
+    """Comprehensive tests for the Colombian Labor Law agent system - Updated version."""
 
     def test_agent_state_creation_and_management(self):
         """Test agent state creation and conversation management."""
