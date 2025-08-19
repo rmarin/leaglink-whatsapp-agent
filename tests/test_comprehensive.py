@@ -307,6 +307,10 @@ class TestLegalAgentComprehensive:
         assert "48 horas" in LABOR_LAW_BASICS  # Weekly work hours
         assert "cesantías" in LABOR_LAW_BASICS.lower()
         assert "prima" in LABOR_LAW_BASICS.lower()
+        
+        # Additional validation for labor rights coverage
+        assert "indemnización" in LABOR_LAW_BASICS.lower()
+        assert "jornada" in LABOR_LAW_BASICS.lower()
 
     @pytest.mark.asyncio
     async def test_edge_cases_and_boundaries(self):
